@@ -1,0 +1,83 @@
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Configuration files with secrets
+config.local.json
+*.env
+.env.local
+.env.*.local
+credentials.json
+secrets.json
+
+# Telegram bot credentials (users should set their own)
+**/monitoring/*-monitor.sh.bak
+
+# Data directories
+data/
+*.db
+*.sqlite
+
+# Backup files
+*.bak
+*.backup
+backup/
+*.old
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# Node modules (if using any Node.js tools)
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Archives
+*.zip
+*.tar.gz
+*.tar
+*.rar
+
+# Keys and certificates
+*.key
+*.pem
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# Local configuration
+config.local
+
+# IP tracking file
+/tmp/vps_proxy_ip.txt
+/tmp/vps-proxy-last-alert
