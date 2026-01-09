@@ -92,6 +92,77 @@ This project helps you set up a proxy server at home (e.g., in Japan) that can b
 - Docker (optional, for containerized setup)
 - SSH access for remote management
 
+## ⚠️ Important: Japanese ISP Limitations
+
+**If you're in Japan, READ THIS FIRST!**
+
+Most Japanese residential ISPs (au Hikari, NTT, Softbank, etc.) use **DS-Lite** or **MAP-E** technology for IPv4 connectivity, which **blocks incoming connections**.
+
+### The Problem
+
+| Technology | Port Forwarding | Explanation |
+|------------|----------------|-------------|
+| **DS-Lite** | ❌ Impossible | Multiple customers share one IPv4 address. All incoming connections are blocked at ISP level. |
+| **MAP-E** | ⚠️ Limited | You get a specific port range (240-1008 ports), but most consumer routers don't support this. |
+| **Traditional IPv4** | ✅ Works | Full port forwarding support. |
+
+**Symptoms:**
+- Port forwarding configured correctly on router, but still can't connect from outside
+- Port checking tools show your port as "closed" or "timeout"
+- Works locally, but friends can't connect from internet
+
+### Solutions for Japanese Users
+
+#### Option 1: Contact Your ISP (Recommended for Home Setup)
+Call your ISP and request:
+- **"固定IPアドレス"** (Fixed IP Address) service
+- Or switch from DS-Lite to **IPv4 PPPoE** connection
+- Cost: Usually ¥1,000-2,000/month extra
+
+After this, the home setup will work as documented.
+
+#### Option 2: Use a VPS Instead (Easier)
+Since residential connections have limitations, using a VPS is often simpler:
+
+**Recommended Japanese VPS Providers:**
+
+| Provider | Starting Price | Location | Notes |
+|----------|---------------|----------|-------|
+| [Vultr Tokyo](https://www.vultr.com/) | $6/month | Tokyo | Fast to China, hourly billing |
+| [Linode Tokyo](https://www.linode.com/) | $5/month | Tokyo | Reliable, good network |
+| [ConoHa VPS](https://www.conoha.jp/) | ¥678/month | Tokyo | Japanese company, CN2 available |
+| [Sakura VPS](https://vps.sakura.ad.jp/) | ¥590/month | Tokyo/Osaka | Cheap, pure Japanese IP |
+
+**Setup is identical:** Just SSH into your VPS and run the installation script:
+```bash
+ssh root@YOUR_VPS_IP
+curl -o install.sh https://raw.githubusercontent.com/kennyyen/local-vps-proxy/main/scripts/install.sh
+chmod +x install.sh
+sudo ./install.sh
+```
+
+#### Option 3: IPv6 (Advanced)
+If you have IPv6 at home and your users have IPv6 connectivity, you can use IPv6 addresses instead. However, this is complex and not widely supported.
+
+### How to Check Your Connection Type
+
+```bash
+# Check if you're using DS-Lite or MAP-E
+curl -4 ifconfig.me
+# If your public IP doesn't match your router's WAN IP, you're likely using DS-Lite/MAP-E
+```
+
+Or check your ISP contract - look for terms like:
+- "IPv4 over IPv6"
+- "DS-Lite"
+- "MAP-E"
+- "v6プラス" (v6 plus)
+- "transix"
+
+**References:**
+- [Asahi Net: Port Forwarding with DS-Lite](https://faq.asahi-net.jp/en/faq_detail.html?id=5309)
+- [Understanding Japanese ISP IPv4 over IPv6](https://kuropixel.com/japanese-internet-guide/)
+
 ## 🚀 Quick Start
 
 ### 1. Automated Installation

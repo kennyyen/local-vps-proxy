@@ -92,6 +92,77 @@
 - Docker（可选，用于容器化部署）
 - SSH远程管理访问权限
 
+## ⚠️ 重要：日本ISP限制说明
+
+**如果你在日本，请务必先看这里！**
+
+大多数日本家庭宽带运营商（au Hikari、NTT、Softbank等）使用 **DS-Lite** 或 **MAP-E** 技术提供IPv4连接，这会**阻止外部连接**。
+
+### 问题说明
+
+| 技术类型 | 端口转发 | 说明 |
+|---------|---------|------|
+| **DS-Lite** | ❌ 完全不可能 | 多个用户共享一个IPv4地址，ISP层面阻止所有外部连接。 |
+| **MAP-E** | ⚠️ 有限支持 | 你会得到特定的端口范围（240-1008个端口），但大多数家用路由器不支持。 |
+| **传统IPv4** | ✅ 正常工作 | 完全支持端口转发。 |
+
+**典型症状：**
+- 路由器端口转发已正确配置，但从外网仍然无法连接
+- 端口检测工具显示端口"关闭"或"超时"
+- 本地可以正常工作，但朋友从外网连不上
+
+### 日本用户的解决方案
+
+#### 方案1：联系运营商（推荐家庭搭建）
+致电运营商并申请：
+- **"固定IPアドレス"**（固定IP地址）服务
+- 或从DS-Lite改为 **IPv4 PPPoE** 连接方式
+- 费用：通常每月额外¥1,000-2,000
+
+完成后，家庭搭建方案就能按文档正常工作了。
+
+#### 方案2：使用VPS替代（更简单）
+由于家庭宽带有限制，使用VPS通常更简单：
+
+**推荐的日本VPS提供商：**
+
+| 提供商 | 起步价格 | 位置 | 备注 |
+|--------|---------|------|------|
+| [Vultr Tokyo](https://www.vultr.com/) | $6/月 | 东京 | 到中国速度快，按小时计费 |
+| [Linode Tokyo](https://www.linode.com/) | $5/月 | 东京 | 稳定可靠，网络质量好 |
+| [ConoHa VPS](https://www.conoha.jp/) | ¥678/月 | 东京 | 日本公司，有CN2线路 |
+| [Sakura VPS](https://vps.sakura.ad.jp/) | ¥590/月 | 东京/大阪 | 价格便宜，纯日本IP |
+
+**设置方法相同：** 只需SSH登录VPS并运行安装脚本：
+```bash
+ssh root@你的VPS_IP
+curl -o install.sh https://raw.githubusercontent.com/kennyyen/local-vps-proxy/main/scripts/install.sh
+chmod +x install.sh
+sudo ./install.sh
+```
+
+#### 方案3：使用IPv6（高级）
+如果你家有IPv6，且用户也有IPv6连接，可以使用IPv6地址。但是这个方案比较复杂，而且支持度不高。
+
+### 如何检查你的连接类型
+
+```bash
+# 检查是否使用DS-Lite或MAP-E
+curl -4 ifconfig.me
+# 如果你的公网IP和路由器WAN IP不匹配，很可能是DS-Lite/MAP-E
+```
+
+或者查看运营商合同，寻找这些关键词：
+- "IPv4 over IPv6"
+- "DS-Lite"
+- "MAP-E"
+- "v6プラス" (v6 plus)
+- "transix"
+
+**参考资料：**
+- [Asahi Net: DS-Lite端口转发说明](https://faq.asahi-net.jp/en/faq_detail.html?id=5309)
+- [日本ISP IPv4 over IPv6技术说明](https://kuropixel.com/japanese-internet-guide/)
+
 ## 🚀 快速开始
 
 ### 1. 自动化安装
